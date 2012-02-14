@@ -39,7 +39,8 @@ DATABASES = {
     }
 }
 
-Add "'Curo'" to the list of INSTALLED_APPS.
+Add "'Curo'" to the list of INSTALLED_APPS and replace the ROOT_URLCONF
+to search in Curo instead of mysite.
 
 Sync the models to the database:
 $ python manage.py syncdb
