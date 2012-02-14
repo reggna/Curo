@@ -1,0 +1,48 @@
+Reference information:
+The following dependencies, setup and configuration instructions are to 
+be considered suggestions, not rules.  It is quite possible to use for example
+SQLite as database engine instead of MySQL, &c.
+
+Dependencies:
+* Django-1.3.1
+   < http://www.djangoproject.com/download/ >
+* mysql and mysql-server
+   < http://dev.mysql.com/downloads/mysql/ >
+* MySQL-python
+   < http://sourceforge.net/projects/mysql-python/ >
+
+Setup:
+Create a project:
+$ django-admin.py startproject mysite
+$ cd mysite/
+$ git clone https://github.com/reggna/Curo.git
+
+Create a database and a user with access to it
+$ mysql -u root -p
+Enter password:
+mysql> create database curo;
+Query OK, 1 row affected (0.00 sec)
+mysql> create user 'curo'@'localhost' identified by 'curo';
+Query OK, 0 rows affected (0.00 sec)
+mysql> grant alter, create, delete, drop, index, insert, select on curo.* to 'curo'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+Replace the database settings in mysite/settings.py with the following lines:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'curo',
+        'USER': 'curo',
+        'PASSWORD': 'curo',
+        'HOST': '',
+        'PORT': '',
+    }
+}
+
+Add "'Curo'" to the list of INSTALLED_APPS.
+
+Sync the models to the database:
+$ python manage.py syncdb
+
+Start the server:
+$ python manage.py runserver
