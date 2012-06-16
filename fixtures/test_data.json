@@ -1,0 +1,58 @@
+[
+    {
+        "fields": {
+            "name": "Food", 
+            "note": "Includes both eating in and eating out"
+        }, 
+        "model": "Curo.Category", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "name": "Clothing", 
+            "note": "Everything you wear on your body"
+        }, 
+        "model": "Curo.Category", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "name": "John Doe", 
+            "note": "A regular John Doe"
+        }, 
+        "model": "Curo.Entity", 
+        "pk": 3
+    }, 
+    {
+        "fields": {
+            "name": "Shop Inc.", 
+            "note": "A store that got everything."
+        }, 
+        "model": "Curo.Entity", 
+        "pk": 4
+    }, 
+    {
+        "fields": {
+            "amount": 300, 
+            "category": 2, 
+            "entity": 3, 
+            "note": "A sweather", 
+            "order_date": "2012-03-12", 
+            "transaction_date": "2012-03-12"
+        }, 
+        "model": "Curo.Transaction", 
+        "pk": 5
+    }, 
+    {
+        "fields": {
+            "amount": 2000, 
+            "category": 1, 
+            "entity": 4, 
+            "note": "Food for the whole month", 
+            "order_date": "2012-03-24", 
+            "transaction_date": "2012-03-25"
+        }, 
+        "model": "Curo.Transaction", 
+        "pk": 6
+    }
+]
