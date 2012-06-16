@@ -10,6 +10,9 @@ Dependencies:
    < http://dev.mysql.com/downloads/mysql/ >
 * MySQL-python
    < http://sourceforge.net/projects/mysql-python/ >
+* Tastypie
+   < https://github.com/toastdriven/django-tastypie >
+   < http://django-tastypie.readthedocs.org/en/latest/tutorial.html#installation >
 
 Setup:
 Create a project:
@@ -47,3 +50,4 @@ $ python manage.py syncdb
 
 Start the server:
 $ python manage.py runserver
+
