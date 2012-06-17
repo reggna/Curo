@@ -24,8 +24,7 @@ class FileResource(ModelResource):
 class TransactionResource(ModelResource):
 
     category = fields.ForeignKey(CategoryResource, 'category')
-    sender   = fields.ForeignKey(EntityResource, 'sender')
-    receiver = fields.ForeignKey(EntityResource, 'receiver')
+    entity   = fields.ForeignKey(EntityResource, 'entity')
 
     class Meta:
         queryset = Transaction.objects.all()
