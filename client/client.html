@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="curo">
+  <head>
+    <meta charset="utf-8">
+    <script src="http://code.angularjs.org/angular-1.0.0.js"></script>
+    <script src="http://code.angularjs.org/angular-resource-1.0.0.js"></script>
+    <script src="http://code.angularjs.org/angular-bootstrap-1.0.0.js"></script>
+    <script src="script/client.js"></script>
+    <script src="script/list.js"></script>
+    <script src="script/batch.js"></script>
+    <script src="script/backend.js"></script>
+    <link href="css/bootstrap.css" rel="stylesheet">
+  </head>
+  <body style="padding: 30px">
+    <!-- Header and navigation bar -->
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/client/home">Curo</a>
+        </div>
+      </div>
+    </div>
+    <!-- Main tabs and view -->
+    <div>
+      <ul class="nav nav-tabs" data-ng-controller="MainTabs">
+        <li data-ng-repeat="tab in tabs" data-ng-class="getClass($index)" data-ng-click="setActive($index)">
+          <a href="{{tab.url}}">{{tab.title}}</a>
+        </li>
+      </ul>
+      <div data-ng-view></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+<div id="list" data-ng-controller="test">
+  <table class="table table-bordered table-striped">
+    <tr>
+      <th>Date</a></th>
+      <th>Amount</a></th>
+      <th>Note</a></th>
+    </tr>
+    <tr ng-repeat="transaction in transactions">
+      <td>{{transaction.transaction_date | date}}</td>
+      <td>{{transaction.amount | currency}}</td>
+      <td>{{transaction.note}}</td>
+    </tr>
+  </table>
+</div>
