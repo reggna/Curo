@@ -1,7 +1,7 @@
 from tastypie import fields
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
-from Curo.models import Transaction, Category, Entity, File
+from models import Transaction, Category, Entity, File
 
 class CategoryResource(ModelResource):
     class Meta:
@@ -23,12 +23,13 @@ class FileResource(ModelResource):
 
 class TransactionResource(ModelResource):
 
-    category = fields.ForeignKey(CategoryResource, 'category')
-    entity   = fields.ForeignKey(EntityResource, 'entity')
+    category     = fields.ForeignKey(CategoryResource, 'category')
+    entity       = fields.ForeignKey(EntityResource, 'entity')
+    files        = fields.ToManyField(FileResource, 'files')
+    transactions = fields.ToManyField(FileResource, 'transactions')
 
     class Meta:
         queryset = Transaction.objects.all()
         resource_name = 'transaction'
         authorization = Authorization()
-        excludes = ['associated_files']
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Curo.models import Transaction, Category, Entity, File
+from models import Transaction, Category, Entity, File
 
 admin.site.register(Transaction)
 admin.site.register(Category)
