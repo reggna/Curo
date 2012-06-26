@@ -1,0 +1,11 @@
+<div id="batch" data-ng-controller="BatchController">
+  <p>From here you can batch add transactions from your internet bank. Paste the data you want to batch add here:</p>
+  <form>
+    <textarea style="box-sizing: border-box; width: 100%; height: 20em" data-ng-model="raw" data-ng-change="update()"></textarea>
+    <button type="submit" class="btn btn-primary">Batch fix</button>
+  </form>
+  <div class="well">
+    <div>Debug</div>
+    <pre>{{parsed | json}}</pre>
+  </div>
+</div>
