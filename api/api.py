@@ -23,8 +23,8 @@ class FileResource(ModelResource):
 
 class TransactionResource(ModelResource):
 
-    category     = fields.ForeignKey(CategoryResource, 'category')
-    entity       = fields.ForeignKey(EntityResource, 'entity')
+    category     = fields.ForeignKey(CategoryResource, 'category',full=True)
+    entity       = fields.ForeignKey(EntityResource, 'entity',full=True)
     files        = fields.ToManyField(FileResource, 'files')
     transactions = fields.ToManyField(FileResource, 'transactions')
 
@@ -32,4 +32,10 @@ class TransactionResource(ModelResource):
         queryset = Transaction.objects.all()
         resource_name = 'transaction'
         authorization = Authorization()
+
+
+
+
+
+
 
