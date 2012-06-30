@@ -17,6 +17,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'tastypie',
     'api',
+    'curo-client'
 )
 
 # Load local settings from local_settings.py
