@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'tastypie',
     'curo-api',
+    'curo-client'
 )
 
 FIXTURE_DIRS = (
