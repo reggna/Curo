@@ -31,36 +31,14 @@ Create a project:
 
     $ git clone https://github.com/reggna/Curo.git
 
-Create a database and a user with access to it
-
-    $ mysql -u root -p
-    Enter password:
-    mysql> create database curo;
-    Query OK, 1 row affected (0.00 sec)
-    mysql> create user 'curo'@'localhost' identified by 'curo';
-    Query OK, 0 rows affected (0.00 sec)
-    mysql> grant alter, create, delete, drop, index, insert, select on curo.* to 'curo'@'localhost';
-    Query OK, 0 rows affected (0.00 sec)
-
-Copy the `local_settings.py.template` file to a new file named
-`local_settings.py`. Modify this file to use the correct database settings.
-This should work for connecting to a local MySQL server database created
-with the above commands:
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'curo',
-            'USER': 'curo',
-            'PASSWORD': 'curo',
-            'HOST': '',
-            'PORT': '',
-        }
-    }
+Create a database and a user with access to it. Modify the settings.py file
+to use the correct database settings. SQLite is setup to work out-of-the-box.
 
 Sync the models to the database:
 
     $ python manage.py syncdb
+    
+TODO: Add sensible fixture
 
 Start the server:
 
