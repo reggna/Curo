@@ -1,0 +1,209 @@
+[
+    {
+        "fields": {
+            "created": "2012-06-26T22:53:34.583", 
+            "name": "food", 
+            "note": "", 
+            "parent": null, 
+            "updated": "2012-06-26T22:53:34.583"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:53:41.327", 
+            "name": "lunch", 
+            "note": "", 
+            "parent": 1, 
+            "updated": "2012-06-26T22:53:41.327"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:53:46.155", 
+            "name": "dinner", 
+            "note": "", 
+            "parent": 2, 
+            "updated": "2012-06-26T22:53:46.155"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 3
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:53:54.529", 
+            "name": "snacks", 
+            "note": "", 
+            "parent": 1, 
+            "updated": "2012-06-26T22:53:54.529"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 4
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:54:16.814", 
+            "name": "fun", 
+            "note": "", 
+            "parent": null, 
+            "updated": "2012-06-26T22:54:16.814"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 5
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:54:20.980", 
+            "name": "games", 
+            "note": "", 
+            "parent": 5, 
+            "updated": "2012-06-26T22:54:20.980"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 6
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:54:43.693", 
+            "name": "party", 
+            "note": "", 
+            "parent": 5, 
+            "updated": "2012-06-26T22:54:43.693"
+        }, 
+        "model": "curo-api.category", 
+        "pk": 7
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:54:52.473", 
+            "name": "Ica", 
+            "note": "", 
+            "updated": "2012-06-26T22:54:52.473"
+        }, 
+        "model": "curo-api.entity", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:54:55.519", 
+            "name": "Coop", 
+            "note": "", 
+            "updated": "2012-06-26T22:54:55.519"
+        }, 
+        "model": "curo-api.entity", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:55:00.973", 
+            "name": "Pasta etc.", 
+            "note": "", 
+            "updated": "2012-06-26T22:55:00.974"
+        }, 
+        "model": "curo-api.entity", 
+        "pk": 3
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:56:19.854", 
+            "name": "Games'r'us", 
+            "note": "", 
+            "updated": "2012-06-26T22:56:19.854"
+        }, 
+        "model": "curo-api.entity", 
+        "pk": 7
+    }, 
+    {
+        "fields": {
+            "created": "2012-06-26T22:57:13.494", 
+            "name": "Party club: Awesome", 
+            "note": "", 
+            "updated": "2012-06-26T22:57:13.494"
+        }, 
+        "model": "curo-api.entity", 
+        "pk": 8
+    }, 
+    {
+        "fields": {
+            "amount": 95, 
+            "category": 2, 
+            "created": "2012-06-26T22:55:54.049", 
+            "entity": 3, 
+            "files": [], 
+            "note": "", 
+            "order_date": "2012-06-26", 
+            "transaction_date": "2012-06-26", 
+            "transactions": [], 
+            "updated": "2012-06-26T22:55:54.049"
+        }, 
+        "model": "curo-api.transaction", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "amount": 500, 
+            "category": 7, 
+            "created": "2012-06-26T22:56:04.418", 
+            "entity": 3, 
+            "files": [], 
+            "note": "", 
+            "order_date": "2012-06-26", 
+            "transaction_date": "2012-06-26", 
+            "transactions": [], 
+            "updated": "2012-06-26T22:56:04.418"
+        }, 
+        "model": "curo-api.transaction", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "amount": 599, 
+            "category": 6, 
+            "created": "2012-06-26T22:56:47.292", 
+            "entity": 7, 
+            "files": [], 
+            "note": "World of Warcraft", 
+            "order_date": "2012-06-12", 
+            "transaction_date": "2012-06-06", 
+            "transactions": [], 
+            "updated": "2012-06-26T22:56:47.293"
+        }, 
+        "model": "curo-api.transaction", 
+        "pk": 3
+    }, 
+    {
+        "fields": {
+            "amount": 1337, 
+            "category": 7, 
+            "created": "2012-06-26T22:57:33.288", 
+            "entity": 8, 
+            "files": [], 
+            "note": "", 
+            "order_date": "2012-06-01", 
+            "transaction_date": "2012-06-03", 
+            "transactions": [], 
+            "updated": "2012-06-26T22:57:33.288"
+        }, 
+        "model": "curo-api.transaction", 
+        "pk": 4
+    }, 
+    {
+        "fields": {
+            "amount": 59, 
+            "category": 4, 
+            "created": "2012-06-26T22:57:41.863", 
+            "entity": 1, 
+            "files": [], 
+            "note": "", 
+            "order_date": "2012-06-26", 
+            "transaction_date": "2012-06-26", 
+            "transactions": [], 
+            "updated": "2012-06-26T22:57:41.863"
+        }, 
+        "model": "curo-api.transaction", 
+        "pk": 5
+    }
+]
