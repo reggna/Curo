@@ -47,4 +47,11 @@ FIXTURE_DIRS = (
     'fixtures',
 )
 
+# Load local settings from local_settings.py
+try:
+    from local_settings import *
+except ImportError, exp:
+    pass
+
+
 
