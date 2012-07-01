@@ -16,7 +16,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'tastypie',
-    'api',
+    'curo-api',
+)
+
+FIXTURE_DIRS = (
+    'fixtures',
 )
 
 # Load local settings from local_settings.py
