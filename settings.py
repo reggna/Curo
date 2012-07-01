@@ -7,6 +7,25 @@ TEMPLATE_DEBUG = DEBUG
 # URL Config
 ROOT_URLCONF = 'urls'
 
+# Database connections
+# For MySQL
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'curo',
+#        'USER': 'username',
+#        'PASSWORD': 'password',
+#        'HOST': 'hostname',
+#        'PORT': 'port',
+#    }
+#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'curo.db',
+    }
+}
+
 # Installed applicatiosn
 INSTALLED_APPS = (
     'django.contrib.auth',
