@@ -16,7 +16,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'tastypie',
-    'api',
+    'curo-api',
     'curo-client'
 )
 
