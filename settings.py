@@ -1,7 +1,5 @@
 # Django settings for Curo project.
 
-SECRET_KEY = '50-char-long-(or-so)-secret-key'
-
 # Enable debug
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
