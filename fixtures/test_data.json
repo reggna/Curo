@@ -4,7 +4,7 @@
             "name": "Food", 
             "note": "Includes both eating in and eating out"
         }, 
-        "model": "api.Category", 
+        "model": "curo-api.Category", 
         "pk": 1
     }, 
     {
@@ -12,7 +12,7 @@
             "name": "Clothing", 
             "note": "Everything you wear on your body"
         }, 
-        "model": "api.Category", 
+        "model": "curo-api.Category", 
         "pk": 2
     }, 
     {
@@ -20,7 +20,7 @@
             "name": "John Doe", 
             "note": "A regular John Doe"
         }, 
-        "model": "api.Entity", 
+        "model": "curo-api.Entity", 
         "pk": 3
     }, 
     {
@@ -28,7 +28,7 @@
             "name": "Shop Inc.", 
             "note": "A store that got everything."
         }, 
-        "model": "api.Entity", 
+        "model": "curo-api.Entity", 
         "pk": 4
     }, 
     {
@@ -40,7 +40,7 @@
             "order_date": "2012-03-12", 
             "transaction_date": "2012-03-12"
         }, 
-        "model": "api.Transaction", 
+        "model": "curo-api.Transaction", 
         "pk": 5
     }, 
     {
@@ -52,7 +52,7 @@
             "order_date": "2012-03-24", 
             "transaction_date": "2012-03-25"
         }, 
-        "model": "api.Transaction", 
+        "model": "curo-api.Transaction", 
         "pk": 6
     }
 ]

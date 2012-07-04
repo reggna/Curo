@@ -3,7 +3,7 @@ from django.db import models
 class Category(models.Model):
     """ Category """
     name             = models.CharField(max_length=100)
-    parent           = models.ForeignKey('self', null=True)
+    parent           = models.ForeignKey('self', null=True, blank=True)
     note             = models.TextField(blank=True)
 
     created          = models.DateTimeField(auto_now_add=True)
@@ -42,8 +42,8 @@ class Transaction(models.Model):
     order_date       = models.DateField()
     transaction_date = models.DateField()
     amount           = models.IntegerField()
-    transactions     = models.ManyToManyField('self')
-    files            = models.ManyToManyField(File)
+    transactions     = models.ManyToManyField('self',null=True,blank=True)
+    files            = models.ManyToManyField(File,null=True,blank=True)
     note             = models.TextField(blank=True)
 
     created          = models.DateTimeField(auto_now_add=True)
