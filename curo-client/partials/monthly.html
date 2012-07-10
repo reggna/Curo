@@ -1,0 +1,24 @@
+<div class="tabbable tabs-left">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#jan" data-toggle="tab">January</a></li>
+        <li><a href="#feb" data-toggle="tab">February</a></li>
+        <li><a href="#mar" data-toggle="tab">March</a></li>
+        <li><a href="#apr" data-toggle="tab">April</a></li>
+        <li><a href="#may" data-toggle="tab">May</a></li>
+        <li><a href="#jun" data-toggle="tab">Juni</a></li>
+        <li><a href="#jul" data-toggle="tab">July</a></li>
+        <li><a href="#aug" data-toggle="tab">August</a></li>
+        <li><a href="#sep" data-toggle="tab">September</a></li>
+        <li><a href="#okt" data-toggle="tab">October</a></li>
+        <li><a href="#nov" data-toggle="tab">November</a></li>
+        <li><a href="#dec" data-toggle="tab">December</a></li>
+    </ul>
+    <div class="tab-content" >
+        <div ng:class="{true:'tab-pane active', false:'tab-pane'}[$index==0]" id="{{ month }}" data-ng-repeat="month in ['jan','feb','mar','apr','may','jun','jul','aug','sep','okt','nov','dec']">
+            <div data-monthly-transaction-table month="{{ month }}"></div>
+        </div>
+    </div>
+
+</div>
+
+

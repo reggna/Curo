@@ -1,0 +1,18 @@
+
+<table class="table">
+    <tr id="lala">
+        <th>Date</th>
+        <th>Category</th>
+        <th>Entity</th>
+        <th>Amount</th>
+        <th>Note</th>
+    </tr>
+    <tr data-ng-repeat="t in ts.objects" data-ng-controller="TransactionTableController">
+        <td>{{ t.order_date }}</td>
+        <td>{{ t.category }}</td>
+        <td data-ng-init="getEntity(t.entity)">{{ entity.name }}</td>
+        <td>{{ t.amount }}</td>
+        <td>{{ t.note }}</td>
+    </tr>
+</table>
+
