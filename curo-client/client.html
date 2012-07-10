@@ -15,10 +15,26 @@
     <script src="script/widgets.js" type="text/javascript"></script>
     <script src="script/controllers.js" type="text/javascript"></script>
     <script src="script/client.js" type="text/javascript"></script>
+    
+    <link href="css/bootstrap.css" rel="stylesheet">
   </head>
   <body style="padding: 30px">
-    <div data-monthly-transaction-list>
-    
+    <!-- Header and navigation bar -->
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/client/home">Curo</a>
+        </div>
+      </div>
+    </div>
+    <!-- Main tabs and view -->
     <div>
+      <ul class="nav nav-tabs" data-ng-controller="MainTabs">
+        <li data-ng-repeat="tab in tabs" data-ng-class="getClass($index)">
+          <a href="{{tab.url}}">{{tab.title}}</a>
+        </li>
+      </ul>
+      <div data-ng-view></div>
+    </div>
   </body>
 </html>

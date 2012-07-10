@@ -3,33 +3,32 @@
    but two objects: 'meta' and 'objects' from the server */
 
 angular.module('CuroResources', ['ngResource'])
-    .factory('Transaction', 
+    .factory('Transaction',
         function($resource, $log) {
             return $resource('/api/transaction/:id', {}, {
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
     )
-    .factory('Entity', 
+    .factory('Entity',
         function($resource, $log) {
             return $resource('/api/entity/:id/', {}, {
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
     )
-    .factory('File', 
+    .factory('File',
         function($resource, $log) {
             return $resource('/api/file/:id', {}, {
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
     )
-    .factory('Category', 
+    .factory('Category',
         function($resource, $log) {
             return $resource('/api/category/:id', {}, {
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
-    )
-    ;
-    
+    );
+
