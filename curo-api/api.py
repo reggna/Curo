@@ -43,4 +43,3 @@ class TransactionResource(ModelResource):
         filtering = {
             'order_date': ALL,
         }
-
