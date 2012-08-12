@@ -5,8 +5,7 @@ function isDate(value) {
 }
 
 function isNumber(value) {
-    return (value !== undefined && !isNaN(Number(value.replace(',',
-                                         '.').replace(' ', ''))));
+    return value !== undefined && !isNaN(Number(value));
 }
 
 function isEmpty(value) {
@@ -17,22 +16,60 @@ function trim(string) {
     return string.replace(/^\s+|\s+$/g, '');
 }
 
+function Validator(name, validate, parse) {
+    this.name = name;
+    this.parse = parse;
+    if(typeof parse === 'function')
+        this.validate = function(string){return validate(parse(string));};
+    else
+        this.validate = validate;
+}
+
+function stripNumber(string) {
+    if(string === undefined) return "";
+    string = string.replace(/( :-)+$/g, '').replace(/\s+/g, '');
+
+    // 1,100.0 && 1.100,0, 1.100 ==> 1100.0
+    var parts = string.split(/[,.]/g);
+    var sum = Number(parts[0]);
+    for(var p = 1; p < parts.length; p++){
+        var num = parts[p];
+        if(p === parts.length-1 && parts[p].length > 2){
+            // This is most probably the decimal part
+            num = num/Math.pow(10, parts[p].length);
+        } else {
+            sum *= 1000;
+        }
+        sum += (sum < 0? -num:num);
+    }
+    return sum;
+}
+
 function detectColumns(data) {
     var columns = [];
+    var validators = [ new Validator("empty", isEmpty),
+                       new Validator("number", isNumber, stripNumber),
+                       new Validator("date", isDate),
+                       new Validator("text", function() { return true; }) ];
+
+    // Check each column separately
     for (var i = 0; i < data[0].length; i++) {
-        var validators = [["empty", 0, isEmpty], ["number", 0, isNumber],
-                          ["date", 0, isDate],
-                          ["text", 0, function () { return true; }]];
+
+        // Use this to count the number of matches for each validator on each cell
+        for (var v in validators) validators[v].count = 0;
+
         // Gather column type information
         for (var j = 0; j < data.length; j++) {
             for (var v = 0; v < validators.length; v++) {
-                validators[v][1] += validators[v][2](data[j][i]) ? 1: 0;
+                if(validators[v].validate(data[j][i]))
+                    validators[v].count += 1;
             }
         }
+
         // Decide column type
         for (var v = 0; v < validators.length; v++) {
-            if (validators[v][1] == data.length) {
-                columns.push(validators[v][0]);
+            if (validators[v].count === data.length) {
+                columns.push(validators[v].name);
                 break;
             }
         }
@@ -58,7 +95,7 @@ function parseInfo(raw, log) {
 function filterInfo(data, log) {
     var result = [];
     var columns = {};
-    
+
     columns["accounting_date"] = data.columns.indexOf("date");
     columns["transaction_date"] = data.columns.indexOf("date", columns["accounting_date"])
     if (columns["transaction_date"] === -1) {
