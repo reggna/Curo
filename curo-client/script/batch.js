@@ -45,12 +45,8 @@ function stripNumber(string) {
     return sum;
 }
 
-function detectColumns(data) {
+function detectColumns(data, validators) {
     var columns = [];
-    var validators = [ new Validator("empty", isEmpty),
-                       new Validator("number", isNumber, stripNumber),
-                       new Validator("date", isDate),
-                       new Validator("text", function() { return true; }) ];
 
     // Check each column separately
     for (var i = 0; i < data[0].length; i++) {
@@ -77,9 +73,20 @@ function detectColumns(data) {
     return columns;
 }
 
-function parseInfo(raw, log) {
+function parseInfo($scope, log, categories) {
+    var raw = $scope.raw
     var data = [];
     var rows = raw.split("\n");
+
+    function isCategory(category) {
+        return categories.indexOf(category) !== -1;
+    }
+
+    var validators = [ new Validator("empty", isEmpty),
+                       new Validator("number", isNumber, stripNumber),
+                       new Validator("date", isDate),
+                       new Validator("category", isCategory),
+                       new Validator("text", function() { return true; }) ];
 
     for (var i = 0; i < rows.length; i++) {
         var columns = rows[i].split("\t");
@@ -89,7 +96,7 @@ function parseInfo(raw, log) {
         }
         data.push(columns);
     }
-    return {columns: detectColumns(data), data: data};
+    return {columns: detectColumns(data, validators), data: data};
 }
 
 function filterInfo(data, log) {
@@ -103,6 +110,7 @@ function filterInfo(data, log) {
     }
     columns["note"] = data.columns.indexOf("text");
     columns["amount"] = data.columns.indexOf("number");
+    columns["category"] = data.columns.indexOf("category");
 
     for (var i = 0; i < data.data.length; i++) {
         result.push([])
@@ -113,13 +121,19 @@ function filterInfo(data, log) {
     return result;
 }
 
-function BatchController($scope, $log) {
+function BatchController($scope, $log, Category) {
     $scope.raw = "";
     $scope.parsed = {};
 
-    $scope.update = function () {
-        var parsedInfo = parseInfo($scope.raw, $log);
-        $scope.parsed = filterInfo(parsedInfo, $log);
-    };
+    Category.get(function(data) {
+        // Populate an array with only the names of the categories
+        var categories = [];
+        for(var i in data.objects) categories[i] = data.objects[i].name;
+
+        $scope.update = function () {
+            var parsedInfo = parseInfo($scope, $log, categories);
+            $scope.parsed = filterInfo(parsedInfo, $log);
+        };
+    });
 }
 
