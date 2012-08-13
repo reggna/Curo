@@ -16,6 +16,7 @@ function MainTabs($scope, $location, $log) {
   }
 }
 
+
 function CategoryController($scope, $http, Category) {
     Category.get({'limit': 1000}, function(data) {
         $scope.categories = data.objects;
@@ -35,5 +36,19 @@ function CategoryController($scope, $http, Category) {
     $scope.remake = function(){
         alert("hej");
     }
+}
+
+function TransactionTableController($log, $scope, Entity,Transaction) {
+
+    $scope.getEntity = function(eId) {
+        eId = eId.substring(0, eId.length - 1)
+        eId = eId.substring(eId.lastIndexOf("/") + 1, eId.length);
+        $scope.entity = Entity.get({id:eId});
+    }
+}
+
+function MonthsController($scope) {
+    $scope.months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','okt','nov','dec'];
+    $scope.tabModel = $scope.months[new Date().getMonth()];
 }
 

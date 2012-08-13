@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     (r'^client/script/(?P<path>.*)$', 'django.views.static.serve', {'document_root': PATH + "/script/"}),
     (r'^client/partials/(?P<path>.*)$', 'django.views.static.serve', {'document_root': PATH + "/partials/"}),
     (r'^client/libs/(?P<path>.*)$', 'django.views.static.serve', {'document_root': PATH + "/libs/"}),
+    (r'^client/img/(?P<path>.*)$', 'django.views.static.serve', {'document_root': PATH + "/img/"}),
     (r'^client/.*$', 'django.views.static.serve', {'path': "client.html", 'document_root': PATH + "/"}),
     (r'^$',  redirect_to, {'url': '/client/'}),
 )
-

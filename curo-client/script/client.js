@@ -1,4 +1,4 @@
-angular.module('Curo', ['CuroResources', 'CuroComponents', 'CuroFilters']
+angular.module('Curo', ['CuroResources', 'CuroComponents', 'CuroFilters', 'bootstrap']
     , function($routeProvider, $locationProvider) {
     
         $routeProvider.when('/client/home', {
