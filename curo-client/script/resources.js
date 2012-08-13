@@ -109,14 +109,14 @@ angular.module('CuroResources', ['ngResource'])
     )
     .factory('File',
         function($resource, $log) {
-            return $resource('/api/file/:id/', {}, {
+            return $resource('/api/file/:id', {}, {
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
     )
     .factory('Category',
         function($resource, $log) {
-            return $resource('/api/category/:id/', {}, {
+            return $resource('/api/category/:id', {}, {
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
