@@ -25,8 +25,8 @@ class TransactionResource(ModelResource):
 
     category     = fields.ForeignKey(CategoryResource, 'category')
     entity       = fields.ForeignKey(EntityResource, 'entity')
-    files        = fields.ToManyField(FileResource, 'files')
-    transactions = fields.ToManyField(FileResource, 'transactions')
+    files        = fields.ToManyField(FileResource, 'files', null=True)
+    transactions = fields.ToManyField(FileResource, 'transactions', null=True)
 
     class Meta:
         queryset = Transaction.objects.all()
