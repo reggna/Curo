@@ -1,6 +1,24 @@
 
 angular.module('CuroComponents', [])
-    .directive('monthlyTransactionTable', 
+    .directive('ngBlur'
+        ,function($log,$parse) {
+            return {
+            restrict: 'A',
+            link:
+                function postLink(scope, element, attrs) {
+                    if (attrs.ngBlur) {
+                        var fn = $parse(attrs.ngBlur);
+                        element.bind('blur', function(event) {
+                            scope.$apply(function() {
+                                fn(scope, {$event:event});
+                            });
+                        });
+                    }
+                }
+            }
+        }
+    )
+    .directive('monthlyTransactionTable',
         function(Transaction,$log) {
             return {
                 restrict: 'EA',
