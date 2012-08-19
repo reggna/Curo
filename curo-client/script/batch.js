@@ -19,10 +19,10 @@ function trim(string) {
 function Validator(name, validate, parse) {
     this.name = name;
     this.parse = parse;
-    if(typeof parse === 'function')
-        this.validate = function(string){return validate(parse(string));};
-    else
-        this.validate = validate;
+    if(typeof parse !== 'function'){
+        this.parse = function(string){ return string };
+    }
+    this.validate = function(string){return validate(this.parse(string));};
 }
 
 function stripNumber(string) {
@@ -34,7 +34,7 @@ function stripNumber(string) {
     var sum = Number(parts[0]);
     for(var p = 1; p < parts.length; p++){
         var num = parts[p];
-        if(p === parts.length-1 && parts[p].length > 2){
+        if(p === parts.length-1 && parts[p].length <= 2){
             // This is most probably the decimal part
             num = num/Math.pow(10, parts[p].length);
         } else {
@@ -65,7 +65,7 @@ function detectColumns(data, validators) {
         // Decide column type
         for (var v = 0; v < validators.length; v++) {
             if (validators[v].count === data.length) {
-                columns.push(validators[v].name);
+                columns.push(validators[v]);
                 break;
             }
         }
@@ -99,29 +99,40 @@ function parseInfo($scope, log, categories) {
     return {columns: detectColumns(data, validators), data: data};
 }
 
-function filterInfo(data, log) {
+function filterInfo(data, categoriesNames, categories, log, Transaction) {
     var result = [];
     var columns = {};
 
-    columns["accounting_date"] = data.columns.indexOf("date");
-    columns["transaction_date"] = data.columns.indexOf("date", columns["accounting_date"])
-    if (columns["transaction_date"] === -1) {
-        columns["transaction_date"] = columns["accounting_date"]
+    for (var row in data.data) {
+        var t = new Transaction();
+        for (var column in data.columns) {
+            var value = data.columns[column].parse(data.data[row][column]);
+            switch(data.columns[column].name) {
+                case "date":
+                    t["transaction_date"] = value;
+                    if(t["order_date"] === undefined)
+                        t["order_date"] = value;
+                    break;
+                case "text":
+                    t["note"] = value;
+                    break;
+                case "number":
+                    t["amount"] = value;
+                    break;
+                case "category":
+                    t["category_obj"] = categories[categoriesNames.indexOf(value)];
+                    t["category"] = t["category_obj"].resource_uri;
+                    break;
+                default: //unknon category
+            }
+        } // for each column
+        result.push(t);
     }
-    columns["note"] = data.columns.indexOf("text");
-    columns["amount"] = data.columns.indexOf("number");
-    columns["category"] = data.columns.indexOf("category");
 
-    for (var i = 0; i < data.data.length; i++) {
-        result.push([])
-        for (var column in columns) {
-            result[i].push(data.data[i][columns[column]])
-        }
-    }
     return result;
 }
 
-function BatchController($scope, $log, Category) {
+function BatchController($scope, $log, Category, Transaction) {
     $scope.raw = "";
     $scope.parsed = {};
 
@@ -132,8 +143,15 @@ function BatchController($scope, $log, Category) {
 
         $scope.update = function () {
             var parsedInfo = parseInfo($scope, $log, categories);
-            $scope.parsed = filterInfo(parsedInfo, $log);
+            $scope.parsed = filterInfo(parsedInfo, categories, data.objects, $log, Transaction);
         };
+
+        $scope.submit = function() {
+            for (var i in $scope.parsed) {
+                delete $scope.parsed[i].category_obj;
+                $scope.parsed[i].$save();
+            }
+        }
     });
 }
 

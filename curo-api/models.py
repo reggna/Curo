@@ -38,13 +38,13 @@ class File(models.Model):
 class Transaction(models.Model):
     """ Transaction """
     category         = models.ForeignKey(Category, related_name='transactions')
-    entity           = models.ForeignKey(Entity, related_name='transactions')
+    entity           = models.ForeignKey(Entity, related_name='transactions', null=True, blank=True)
     order_date       = models.DateField()
     transaction_date = models.DateField(null=True,blank=True)
     amount           = models.IntegerField()
     transactions     = models.ManyToManyField('self',null=True,blank=True)
     files            = models.ManyToManyField(File,null=True,blank=True)
-    note             = models.TextField(blank=True)
+    note             = models.TextField(null=True,blank=True)
 
     created          = models.DateTimeField(auto_now_add=True)
     updated          = models.DateTimeField(auto_now=True)

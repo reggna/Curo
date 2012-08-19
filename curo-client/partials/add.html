@@ -6,7 +6,7 @@
       <h2>Insert data here</h2>
       <form>
         <textarea style="box-sizing: border-box; width: 100%; height: 20em" data-ng-model="raw" data-ng-change="update()"></textarea>
-        <button type="submit" class="btn btn-primary">Add transactions</button>
+        <button type="submit" data-ng-click="submit()" class="btn btn-primary">Add transactions</button>
       </form>
     </div>
     <div class="well span6">
@@ -20,7 +20,11 @@
           <th>Category</th>
         </tr>
         <tr data-ng-repeat="row in parsed">
-          <td data-ng-repeat="data in row">{{data}}</td>
+          <td>{{row.accounting_date}}</td>
+          <td>{{row.transaction_date}}</td>
+          <td>{{row.note}}</td>
+          <td>{{row.amount}}</td>
+          <td>{{row.category_obj.name}}</td>
         </tr>
       </table>
     </div>
