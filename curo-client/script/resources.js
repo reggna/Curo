@@ -120,5 +120,35 @@ angular.module('CuroResources', ['ngResource'])
                     'query': { method: 'GET', params:{}, isArray:false}
                 });
         }
-    );
+    )
+    .factory('CategoryStats', ['$http', '$log', '$q', function ($http, $log, $q) {
+        
+        return {
+            query: function () {
+                var result = $q.defer();
+
+                function internal_query(url, list) {
+                    $http.get(url)
+                        .success(function (data, status, headers, config) {
+                            list = list.concat(data.objects);
+                            if (data.meta.next) {
+                                internal_query(data.meta.next, list);
+                            } else {
+                                result.resolve(list);
+                            }
+                        })
+                        .error(function(data, status, headers, config) {
+                            result.reject("Failed");
+                        });
+                }
+                internal_query("/api/categorystats/", []);
+                
+                return result.promise;
+            },
+
+            test: function () {
+                $log.info("factory.test");
+            }
+        };
+    }]);
 

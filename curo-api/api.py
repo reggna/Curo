@@ -4,6 +4,8 @@ from tastypie.authorization import Authorization
 from models import Transaction, Category, Entity, File
 
 class CategoryResource(ModelResource):
+    parent = fields.ForeignKey('Curo.curo-api.api.CategoryResource', 'parent', null=True)
+
     class Meta:
         queryset = Category.objects.all()
         resource_name = 'category'
@@ -33,3 +35,20 @@ class TransactionResource(ModelResource):
         resource_name = 'transaction'
         authorization = Authorization()
         filtering = {"order_date": ALL}
+
+class CategoryStatsResource(CategoryResource):
+    amount = fields.IntegerField()
+    parent = fields.ForeignKey('Curo.curo-api.api.CategoryStatsResource', 'parent', null=True)
+    
+    class Meta:
+        allowed_methods = ['get']
+        queryset = Category.objects.all()
+        authorization = Authorization()
+    
+    def dehydrate_amount(self, bundle):
+        amount = 0
+        for transaction in bundle.obj.transactions.all():
+            amount += transaction.amount
+        
+        return amount
+
