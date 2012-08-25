@@ -126,8 +126,11 @@ angular.module('CuroResources', ['ngResource'])
 
             Resource.prototype.save = function (callback) {
                 var value  = this;
-
-                $http.post(base_url, this)
+                var method = this.resource_uri ? "PUT": "POST";
+                var url    = this.resource_uri ? this.resource_uri: base_url;
+                
+                $log.info("save", method, url, value);
+                $http({method: method, url: url, data: value})
                     .success(function (data, status, headers, config) {
                         $log.info("save, success", data, status, config);
                         if (status === 201) {
