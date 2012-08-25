@@ -18,24 +18,8 @@ function MainTabs($scope, $location, $log) {
 
 
 function CategoryController($scope, $http, Category) {
-    Category.get({'limit': 1000}, function(data) {
-        $scope.categories = data.objects;
-    });
-    $scope.update = function() {
-        $http.post('/api/category/', this.c);
-    };
-    $scope.add = function(){
-        $http.post('/api/category/', this.category).then(function(result){
-            Category.get({"id": result.headers().location.substring(result.headers().location.lastIndexOf("/")+1)},
-                    function(data) {
-                $scope.category = data;
-            });
-        });  
-    };
-    
-    $scope.remake = function(){
-        alert("hej");
-    }
+    $scope.categories = Category.query();
+    $scope.category = new Category();
 }
 
 function TransactionTableController($log, $scope, Entity,Transaction) {

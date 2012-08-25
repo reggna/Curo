@@ -2,10 +2,10 @@
     <h1>Categories</h2>
     <div class="categories">
         <div data-ng-repeat="c in categories | orderBy:id">
-            <input type="text" value="{{c.name}}" data-ng-model="c.name" data-ng-change="update()">
-            <input type="text" value="{{c.note}}" data-ng-model="c.note" data-ng-change="update()">
+            <input type="text" value="{{c.name}}" data-ng-model="c.name" data-ng-change="c.save()">
+            <input type="text" value="{{c.note}}" data-ng-model="c.note" data-ng-change="c.save()">
         </div>
-        <input type="text" name="name" data-ng-model="category.name" data-ng-change="add()">
-        <input type="text" name="note" data-ng-model="category.note" data-ng-change="add()" onblur="console.log('TODO: add new row at end')">
+        <input type="text" name="name" data-ng-model="category.name" data-ng-change="category.save()">
+        <input type="text" name="note" data-ng-model="category.note" data-ng-change="category.save()" onblur="console.log('TODO: add new row at end')">
     </div>
 </div>
