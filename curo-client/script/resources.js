@@ -67,6 +67,12 @@ function handleDateParameters(data) {
 angular.module('CuroResources', ['ngResource'])
     .factory('Resource', ['$http', '$log', function ($http, $log) {
 
+        var call_callback = function (callback, value) {
+            if (callback !== undefined) {
+                callback(value);
+            }
+        }
+
         var ResourceFactory = function (base_url) {
 
             var Resource = function (data) {
@@ -88,11 +94,11 @@ angular.module('CuroResources', ['ngResource'])
                                 internal_query(data.meta.next, list);
                             } else {
                                 $log.info("query, done", list);
-                                callback(list);
+                                call_callback(callback, list);
                             }
                         })
                         .error(function (data, status, headers, config) {
-                            callback("Failed");
+                            call_callback(callback, "Failed");
                         });
                 }
                 internal_query(base_url, value);
@@ -108,11 +114,11 @@ angular.module('CuroResources', ['ngResource'])
                     .success(function (data, status, headers, config) {
                         $log.info("get, success", data, status, config, callback);
                         angular.extend(value, data);
-                        callback(value);
+                        call_callback(callback, value);
                     })
                     .error(function (data, status, headers, config) {
                         $log.info("get, failed", data, config);
-                        callback("Failed");
+                        call_callback(callback, "Failed");
                     });
 
                 return value;
@@ -128,16 +134,16 @@ angular.module('CuroResources', ['ngResource'])
                             Resource.get(headers("Location"),
                                 function (newdata) {
                                     angular.extend(value, newdata);
-                                    callback(value);
+                                    call_callback(callback, value);
                                 });
                         } else {
                             $log.info("old, updated");
-                            callback("Failed");
+                            call_callback(callback, value);
                         }
                     })
                     .error(function (data, status, headers, config) {
                         $log.info("save, fail", data, status, config);
-                        callback("Failed");
+                        call_callback(callback, "Failed");
                     });
 
                 return value;
