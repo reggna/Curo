@@ -64,7 +64,7 @@ angular.module('CuroComponents', [])
         }
     )
     .directive('monthlyTransactionStats',
-        function(CategoryStats, Category, $log) {
+        function(CategoryStats, $log) {
             return {
                 restrict: 'EA',
                 replace: true,
@@ -73,20 +73,19 @@ angular.module('CuroComponents', [])
                 link: function postLink(scope, iElement, iAttrs) {
                 
                     //scope.$watch('month', function(newValue, oldValue) {
-                        CategoryStats.query()
-                            .then(function(data) {
+                        CategoryStats.query(
+                            function(data) {
                                 $log.info("got:", data);
                                 
-                                var result = [];
-                                
                                 function treeify(list, parent) {
-                                    var name = parent == null ? "base": parent.name;
+                                    //var name = parent == null ? "base": parent.name;
                                     //$log.info("loop", name, list);
                                     var result = [];
                                     for (var i = 0; i < list.length; i++) {
                                         if (list[i].parent === parent.resource_uri) {
                                             //$log.info(i, list[i]);
                                             result.push(list.splice(i, 1)[0]);
+                                            i--;
                                         }
                                     }
                                     //$log.info("result", result);
@@ -112,18 +111,18 @@ angular.module('CuroComponents', [])
                                 }
                                 
                                 function addall(tree, parentElem, level) {
-                                    $log.info("addall", tree, parentElem);
+                                    //$log.info("addall", tree, parentElem);
                                     if (tree === undefined || tree === null) {
                                         return;
                                     }
-                                    $log.info("tree", tree, tree.length);
+                                    //$log.info("tree", tree, tree.length);
                                     for (var i = 0; i < tree.length; i++) {
-                                        $log.info("element", tree[i]);
+                                        //$log.info("element", tree[i]);
                                         elem = angular.element("<tr style='padding-left: 20px'></tr>");
                                         if (tree[i].childs.length === 0) {
                                             elem.append(angular.element("<td style='padding-left: " + level + "em'>" + tree[i].name + "</td>"));
                                         } else {
-                                            elem.append(angular.element("<td style='padding-left: " + level + "em'> + " + tree[i].name + "</td>"));
+                                            elem.append(angular.element("<td style='padding-left: " + level + "em'>" + tree[i].name + " <i class='icon-minus'></i></td>"));
                                         }
                                         elem.append(angular.element("<td>" + tree[i].amount + "</td>"));
                                         parentElem.append(elem);
@@ -133,26 +132,22 @@ angular.module('CuroComponents', [])
                                 
                                 categories = treeify(data, {"resource_uri": null}).childs;
                                 summ(categories);
-                                $log.info("categories", categories);
+                                //$log.info("categories", categories);
                                 var x = angular.element("<table class='table table-striped'></table>");
                                 iElement.append(x);
                                 addall(categories, x, 1);
                                 scope.test = categories;
-                                
+                                treeify(data, {"resource_uri": null}).childs;
                             });
                         
-                        $log.info(Category);
-                        $log.info(Category.$query);
                         /*scope.test = CategoryStats.query(
                             function(data) {
                                 
                             });*/
-                    //});
+                    //});*/
                 },
-                controller: ['$scope','Transaction','$log', function($scope, Transaction, $log) {
-                    //$scope.data = $scope.stats.objects;
-                    //$log.info($scope.stat)
-                    //$scope.test = CategoryStats.query({full:true});
+                controller: ['$scope','$log', 'CategoryStats', function($scope, $log, CategoryStats) {
+
                 }
                 ]
             }
