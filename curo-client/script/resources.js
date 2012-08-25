@@ -123,32 +123,81 @@ angular.module('CuroResources', ['ngResource'])
     )
     .factory('CategoryStats', ['$http', '$log', '$q', function ($http, $log, $q) {
         
-        return {
-            query: function () {
-                var result = $q.defer();
-
-                function internal_query(url, list) {
-                    $http.get(url)
-                        .success(function (data, status, headers, config) {
-                            list = list.concat(data.objects);
-                            if (data.meta.next) {
-                                internal_query(data.meta.next, list);
-                            } else {
-                                result.resolve(list);
-                            }
-                        })
-                        .error(function(data, status, headers, config) {
-                            result.reject("Failed");
-                        });
-                }
-                internal_query("/api/categorystats/", []);
-                
-                return result.promise;
-            },
-
-            test: function () {
-                $log.info("factory.test");
-            }
+        var base_url = "/api/categorystats/";
+        
+        var Resource = function(data) {
+            angular.extend(this, data);
         };
+        
+        Resource.query = function (callback) {
+            var value = [];
+
+            function internal_query(url, list) {
+                $log.info("query, internal", url, list);
+                $http.get(url)
+                    .success(function (data, status, headers, config) {
+                        for(var i = 0; i < data.objects.length; i++) {
+                            list.push(new Resource(data.objects[i]));
+                        }
+                        if (data.meta.next) {
+                            internal_query(data.meta.next, list);
+                        } else {
+                            $log.info("query, done", list);
+                            callback(list);
+                        }
+                    })
+                    .error(function(data, status, headers, config) {
+                        callback("Failed");
+                    });
+            }
+            internal_query(base_url, value);
+            
+            return value;
+        };
+
+        Resource.get = function (resource_uri, callback) {
+            var value = new Resource();
+
+            $log.info("get", resource_uri, callback);
+            $http.get(resource_uri)
+                .success(function (data, status, headers, config) {
+                    $log.info("get, success", data, status, config, callback);
+                    angular.extend(value, data);
+                    callback(value);
+                })
+                .error(function(data, status, headers, config) {
+                    $log.info("get, failed", data, config);
+                    callback("Failed");
+                });
+            
+            return value;
+        };
+        
+        Resource.prototype.save = function (callback) {
+            var value  = this;
+            
+            $http.post(base_url, this)
+                .success(function (data, status, headers, config) {
+                    $log.info("save, success", data, status, config);
+                    if (status == 201) {
+                        Resource.get(headers("Location"),
+                            function (newdata) {
+                                angular.extend(value, newdata);
+                                callback(value);
+                            });
+                    } else {
+                        $log.info("old, updated");
+                        result.reject("Failed");
+                    }
+                })
+                .error(function (data, status, headers, config) {
+                    $log.info("save, fail", data, status, config);
+                    callback("Failed");
+                });
+
+            return value;
+        }
+
+        return Resource;
     }]);
 
