@@ -65,6 +65,87 @@ function handleDateParameters(data) {
    but two objects: 'meta' and 'objects' from the server */
 
 angular.module('CuroResources', ['ngResource'])
+    .factory('Resource', ['$http', '$log', function ($http, $log) {
+
+        var ResourceFactory = function (base_url) {
+
+            var Resource = function (data) {
+                angular.extend(this, data);
+            };
+
+            Resource.query = function (callback) {
+                var value = [];
+
+                function internal_query(url, list) {
+                    $log.info("query, internal", url, list);
+                    $http.get(url)
+                        .success(function (data, status, headers, config) {
+                            var i = 0;
+                            for (i = 0; i < data.objects.length; i++) {
+                                list.push(new Resource(data.objects[i]));
+                            }
+                            if (data.meta.next) {
+                                internal_query(data.meta.next, list);
+                            } else {
+                                $log.info("query, done", list);
+                                callback(list);
+                            }
+                        })
+                        .error(function (data, status, headers, config) {
+                            callback("Failed");
+                        });
+                }
+                internal_query(base_url, value);
+
+                return value;
+            };
+
+            Resource.get = function (resource_uri, callback) {
+                var value = new Resource();
+
+                $log.info("get", resource_uri, callback);
+                $http.get(resource_uri)
+                    .success(function (data, status, headers, config) {
+                        $log.info("get, success", data, status, config, callback);
+                        angular.extend(value, data);
+                        callback(value);
+                    })
+                    .error(function (data, status, headers, config) {
+                        $log.info("get, failed", data, config);
+                        callback("Failed");
+                    });
+
+                return value;
+            };
+
+            Resource.prototype.save = function (callback) {
+                var value  = this;
+
+                $http.post(base_url, this)
+                    .success(function (data, status, headers, config) {
+                        $log.info("save, success", data, status, config);
+                        if (status === 201) {
+                            Resource.get(headers("Location"),
+                                function (newdata) {
+                                    angular.extend(value, newdata);
+                                    callback(value);
+                                });
+                        } else {
+                            $log.info("old, updated");
+                            callback("Failed");
+                        }
+                    })
+                    .error(function (data, status, headers, config) {
+                        $log.info("save, fail", data, status, config);
+                        callback("Failed");
+                    });
+
+                return value;
+            };
+            return Resource;
+        };
+        return ResourceFactory;
+    }])
     .factory('Transaction',
         function($resource, $log, Entity, Category) {
             var res = $resource('/api/transaction/:id/', {}, {
@@ -100,104 +181,16 @@ angular.module('CuroResources', ['ngResource'])
             return res;
         }
     )
-    .factory('Entity',
-        function($resource, $log) {
-            return $resource('/api/entity/:id', {}, {
-                    'query': { method: 'GET', params:{}, isArray:false}
-                });
-        }
-    )
-    .factory('File',
-        function($resource, $log) {
-            return $resource('/api/file/:id', {}, {
-                    'query': { method: 'GET', params:{}, isArray:false}
-                });
-        }
-    )
-    .factory('Category',
-        function($resource, $log) {
-            return $resource('/api/category/:id', {}, {
-                    'query': { method: 'GET', params:{}, isArray:false}
-                });
-        }
-    )
-    .factory('CategoryStats', ['$http', '$log', '$q', function ($http, $log, $q) {
-        
-        var base_url = "/api/categorystats/";
-        
-        var Resource = function(data) {
-            angular.extend(this, data);
-        };
-        
-        Resource.query = function (callback) {
-            var value = [];
-
-            function internal_query(url, list) {
-                $log.info("query, internal", url, list);
-                $http.get(url)
-                    .success(function (data, status, headers, config) {
-                        for(var i = 0; i < data.objects.length; i++) {
-                            list.push(new Resource(data.objects[i]));
-                        }
-                        if (data.meta.next) {
-                            internal_query(data.meta.next, list);
-                        } else {
-                            $log.info("query, done", list);
-                            callback(list);
-                        }
-                    })
-                    .error(function(data, status, headers, config) {
-                        callback("Failed");
-                    });
-            }
-            internal_query(base_url, value);
-            
-            return value;
-        };
-
-        Resource.get = function (resource_uri, callback) {
-            var value = new Resource();
-
-            $log.info("get", resource_uri, callback);
-            $http.get(resource_uri)
-                .success(function (data, status, headers, config) {
-                    $log.info("get, success", data, status, config, callback);
-                    angular.extend(value, data);
-                    callback(value);
-                })
-                .error(function(data, status, headers, config) {
-                    $log.info("get, failed", data, config);
-                    callback("Failed");
-                });
-            
-            return value;
-        };
-        
-        Resource.prototype.save = function (callback) {
-            var value  = this;
-            
-            $http.post(base_url, this)
-                .success(function (data, status, headers, config) {
-                    $log.info("save, success", data, status, config);
-                    if (status == 201) {
-                        Resource.get(headers("Location"),
-                            function (newdata) {
-                                angular.extend(value, newdata);
-                                callback(value);
-                            });
-                    } else {
-                        $log.info("old, updated");
-                        result.reject("Failed");
-                    }
-                })
-                .error(function (data, status, headers, config) {
-                    $log.info("save, fail", data, status, config);
-                    callback("Failed");
-                });
-
-            return value;
-        }
-
-        return Resource;
+    .factory('Entity', ['Resource', function (Resource, $log) {
+        return Resource("/api/entity/");
+    }])
+    .factory('File', ['Resource', function (Resource, $log) {
+        return Resource("/api/file/");
+    }])
+    .factory('Category', ['Resource', function (Resource, $log) {
+        return Resource("/api/category/");
+    }])
+    .factory('CategoryStats', ['Resource', function (Resource, $log) {
+        return Resource("/api/categorystats/");
     }]);
 
