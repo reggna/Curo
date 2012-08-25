@@ -151,6 +151,16 @@ angular.module('CuroResources', ['ngResource'])
 
                 return value;
             };
+
+            Resource.prototype.remove = function(callback) {
+                $http.delete(this.resource_uri)
+                    .success(function (data, status, headers, config) {
+                        call_callback(callback, "Ok");
+                    })
+                    .error(function (data, status, headers, config) {
+                        call_callback(callback, "Error");
+                    });
+            };
             return Resource;
         };
         return ResourceFactory;
