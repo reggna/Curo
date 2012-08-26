@@ -79,7 +79,7 @@ angular.module('CuroResources', ['ngResource'])
                 angular.extend(this, data);
             };
 
-            Resource.query = function (callback) {
+            Resource.query = function (success, error) {
                 var value = [];
 
                 function internal_query(url, list) {
@@ -94,11 +94,11 @@ angular.module('CuroResources', ['ngResource'])
                                 internal_query(data.meta.next, list);
                             } else {
                                 $log.info("query, done", list);
-                                call_callback(callback, list);
+                                call_callback(success, list);
                             }
                         })
                         .error(function (data, status, headers, config) {
-                            call_callback(callback, "Failed");
+                            call_callback(error, "Failed");
                         });
                 }
                 internal_query(base_url, value);
@@ -106,25 +106,25 @@ angular.module('CuroResources', ['ngResource'])
                 return value;
             };
 
-            Resource.get = function (resource_uri, callback) {
+            Resource.get = function (resource_uri, success, error) {
                 var value = new Resource();
 
-                $log.info("get", resource_uri, callback);
+                $log.info("get", resource_uri, success, error);
                 $http.get(resource_uri)
                     .success(function (data, status, headers, config) {
-                        $log.info("get, success", data, status, config, callback);
+                        $log.info("get, success", data, status, config, success);
                         angular.extend(value, data);
-                        call_callback(callback, value);
+                        call_callback(success, value);
                     })
                     .error(function (data, status, headers, config) {
                         $log.info("get, failed", data, config);
-                        call_callback(callback, "Failed");
+                        call_callback(error, "Failed");
                     });
 
                 return value;
             };
 
-            Resource.prototype.save = function (callback) {
+            Resource.prototype.save = function (success, error) {
                 var value  = this;
                 var method = this.resource_uri ? "PUT": "POST";
                 var url    = this.resource_uri ? this.resource_uri: base_url;
@@ -137,28 +137,28 @@ angular.module('CuroResources', ['ngResource'])
                             Resource.get(headers("Location"),
                                 function (newdata) {
                                     angular.extend(value, newdata);
-                                    call_callback(callback, value);
+                                    call_callback(success, value);
                                 });
                         } else {
                             $log.info("old, updated");
-                            call_callback(callback, value);
+                            call_callback(success, value);
                         }
                     })
                     .error(function (data, status, headers, config) {
                         $log.info("save, fail", data, status, config);
-                        call_callback(callback, "Failed");
+                        call_callback(error, "Failed");
                     });
 
                 return value;
             };
 
-            Resource.prototype.remove = function(callback) {
+            Resource.prototype.remove = function(success, error) {
                 $http.delete(this.resource_uri)
                     .success(function (data, status, headers, config) {
-                        call_callback(callback, "Ok");
+                        call_callback(success, "Ok");
                     })
                     .error(function (data, status, headers, config) {
-                        call_callback(callback, "Error");
+                        call_callback(error, "Error");
                     });
             };
             return Resource;
