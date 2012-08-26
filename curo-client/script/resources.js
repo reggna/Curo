@@ -1,13 +1,49 @@
-
-/* We redefine query in alla resources since we do not get a list of objects
-   but two objects: 'meta' and 'objects' from the server */
-
-angular.module('CuroResources', ['ngResource'])
+angular.module('CuroResources', [])
     .factory('Resource', ['$http', '$log', function ($http, $log) {
 
         var call_callback = function (callback, value) {
             if (callback !== undefined) {
                 callback(value);
+            }
+        }
+
+        var translate_convenience_params = function() {
+            function handle_param_interval(params,param,field) {
+                var dateInterval = params[param];
+                if (dateInterval) {
+                    params[field + "__gte"] = dateInterval.startDateAsString();
+                    params[field + "__lte"] = dateInterval.endDateAsString();
+                }
+                delete params[param];
+            }
+        
+            var intervalPattern = /^interval(?:__(.+))?$/;
+            return function (params) {
+                var match;
+                for (param in params) {
+                    if ((match = param.match(intervalPattern)) != null) {
+                        
+                        var field = match[1];
+                        if (!field) {
+                            field = "order_date";
+                        }
+                        handle_param_interval(params,param,field);
+                    }
+                }
+            }
+        }();
+        
+        function build_url(base, params) {
+            if (!params || params === {}) {
+                return base;
+            } else {
+                translate_convenience_params(params);
+                
+                var ps = Array();
+                for (param in params) {
+                    ps.push(param + "=" + params[param]);
+                }
+                return base + "?" + ps.join("&");
             }
         }
 
@@ -17,7 +53,11 @@ angular.module('CuroResources', ['ngResource'])
                 angular.extend(this, data);
             };
 
-            Resource.query = function (success, error) {
+            Resource.query = function (params, success, error) {
+                if (angular.isFunction(params)) {
+                    callback = params;
+                    params = {};
+                }
                 var value = [];
 
                 function internal_query(url, list) {
@@ -39,7 +79,7 @@ angular.module('CuroResources', ['ngResource'])
                             call_callback(error, "Failed");
                         });
                 }
-                internal_query(base_url, value);
+                internal_query(build_url(base_url, params), value);
 
                 return value;
             };
@@ -103,13 +143,9 @@ angular.module('CuroResources', ['ngResource'])
         };
         return ResourceFactory;
     }])
-    .factory('Transaction',
-        function($resource, $log) {
-            return $resource('/api/transaction/:id', {}, {
-                    'query': { method: 'GET', params:{}, isArray:false}
-                });
-        }
-    )
+    .factory('Transaction', ['Resource', function (Resource, $log) {
+        return Resource("/api/transaction/");
+    }])
     .factory('Entity', ['Resource', function (Resource, $log) {
         return Resource("/api/entity/");
     }])
