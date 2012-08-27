@@ -3,7 +3,7 @@
         <a href="#" id="editModeButton" class="btn btn-primary btn-large" data-ng-click="toggleEditMode()">Edit</a>
         <a href="#" id="editModeButton" class="btn btn-primary btn-large" data-ng-click="saveTransaction()">Save</a>
     </div>
-    <table class="table" style="table-layout:fixed;width:100%;">
+    <table class="table table-striped table-condensed">
         <colgroup>
             <col width="15"/>
             <col width="30" valign="middle"/>
@@ -20,19 +20,21 @@
             <th>Note</th>
             <th></th>
         </tr>
-        <tr data-ng-repeat="t in ts.objects" data-ng-controller="TransactionTableController">
+        <tr data-ng-hide="ts">
+            <td colspan="6">Loading data...</td>
+        </tr>
+        <tr data-ng-hide="ts.length > 0">
+            <td colspan="6">No information in this month</td>
+        </tr>
+        <tr data-ng-repeat="t in ts" data-ng-show="ts" data-ng-controller="TransactionTableController">
             <td>{{ t.order_date }}</td>
-            <td>{{ t.category.name }}</td>
-            <!--
-            <td data-ng-init="getEntity(t.entity)">{{ entity.name }}</td>-->
-            <td>{{ t.entity.name }}</td>
+            <td>{{ t.category }}</td>
+            <td data-ng-init="getEntity(t)">{{ t.entity.name }}</td>
             <td>{{ t.amount }}</td>
             <td>{{ t.note }}</td>
             <td><button class="btn btn-danger" data-ng-show="isEditMode"><i class="icon-trash icon-white"></i></button></td>
         </tr>
-        <!--<tr id="addRow">
-            <td colspan="6"><button id="addRowButton" class="btn btn-primary btn-large">Add new transaction</button></td>
-        </tr>-->
+
         <tr id="newDataRow" data-ng-show="isEditMode">
             <td><input type="text" placeholder="date" class="input-small" data-ng-model="newTransaction.order_date"/></td>
             <td><input type="text" placeholder="category" data-ng-model="newTransaction.category"/></td>
@@ -42,8 +44,5 @@
             <td></td>
         </tr>
     </table>
-    <!--<pre>
-       value:  {{newTransaction | json}}
-    </pre>-->
 </div>
 
