@@ -40,3 +40,9 @@ function MonthsController($scope,DateService) {
     $scope.tabModel = $scope.months[new Date().getMonth()].name;
 }
 
+
+function YearController($scope, DateService) {
+    var year = new Date().getFullYear();
+    var interval = DateService.dateInterval(new Date(year, 0, 1), new Date(year + 1, 0, 0));
+    $scope.interval = interval;
+}
