@@ -156,8 +156,8 @@ angular.module('CuroResources', ['ngResource'])
     .factory('Category', ['Resource', function (Resource, $log) {
         return Resource("/api/category/");
     }])
-    .factory('CategoryStats', ['Resource', function (Resource, $log) {
-        return Resource("/api/categorystats/");
+    .factory('Statistics', ['Resource', function (Resource, $log) {
+        return Resource("/api/statistics/");
     }])
     ;
 

@@ -36,9 +36,9 @@ class TransactionResource(ModelResource):
         authorization = Authorization()
         filtering = {"order_date": ALL}
 
-class CategoryStatsResource(CategoryResource):
+class StatisticsResource(CategoryResource):
     amount = fields.IntegerField()
-    parent = fields.ForeignKey('Curo.curo-api.api.CategoryStatsResource', 'parent', null=True)
+    parent = fields.ForeignKey('Curo.curo-api.api.StatisticsResource', 'parent', null=True)
     
     class Meta:
         allowed_methods = ['get']
@@ -46,8 +46,12 @@ class CategoryStatsResource(CategoryResource):
         authorization = Authorization()
     
     def dehydrate_amount(self, bundle):
+        filters = {}
+        for item in bundle.request.GET:
+            if item.startswith("order_date"):
+                filters[item] = bundle.request.GET[item]
         amount = 0
-        for transaction in bundle.obj.transactions.all():
+        for transaction in bundle.obj.transactions.filter(**filters):
             amount += transaction.amount
         
         return amount

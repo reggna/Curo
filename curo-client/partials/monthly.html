@@ -2,7 +2,7 @@
     <div class="tab-pane" data-ng-repeat="month in months" title="{{month | dateIntervalName}}" value="{{month | dateIntervalName}}">
         <div class="row-fluid">
             <div class="span9" data-monthly-transaction-table month="month"></div>
-            <div class="well span3" data-monthly-transaction-stats month="{{month}}"></div>
+            <div class="well span3" data-statistics interval="month"></div>
         </div>
     </div>
 </div>
