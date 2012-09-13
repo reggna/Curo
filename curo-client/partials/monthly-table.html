@@ -1,0 +1,24 @@
+<div class="monthly-view">
+    <table class="table table-striped table-condensed">
+        <tr>
+            <th class="monthly-table cell-date">Date</th>
+            <th class="monthly-table cell-category">Category</th>
+            <th class="monthly-table cell-entity">Entity</th>
+            <th class="monthly-table cell-amount">Amount</th>
+            <th class="monthly-table cell-note">Note</th>
+        </tr>
+        <tr data-ng-hide="ts != null" class="monthly-table-loading">
+            <td colspan="5" class="well well-large">Loading data...</td>
+        </tr>
+        <tr data-ng-show="ts !=null && ts.length == 0" class="monthly-table-no-data">
+            <td colspan="5" class="well well-large">No information in this month</td>
+        </tr>
+        <tr data-ng-repeat="t in ts">
+            <td>{{ t.order_date }}</td>
+            <td data-ng-init="getCategory(t)">{{ getFullCategoryName(t.category) }}</td>
+            <td data-ng-init="getEntity(t)">{{ t.entity.name }}</td>
+            <td class="currency" data-currency-suffix=" kr" data-currency-decimals="2">{{ t.amount }}</td>
+            <td>{{ t.note }}</td>
+        </tr>
+    </table>
+</div>
