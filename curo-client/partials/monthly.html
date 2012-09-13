@@ -1,3 +1,7 @@
-<div class="well">
-  Monthly view is not implemented yet.
+<div class="tabbable tabs-left" data-ng-controller="MonthsController" data-ng-model="tabModel">
+    <div class="tab-pane" data-ng-repeat="month in months" title="{{month | dateIntervalName}}" value="{{month | dateIntervalName}}">
+        <div class="row-fluid">
+            <div class="span11" data-monthly-transaction-table month="month"></div>
+        </div>
+    </div>
 </div>

@@ -40,7 +40,7 @@ class Transaction(models.Model):
     category         = models.ForeignKey(Category, related_name='transactions')
     entity           = models.ForeignKey(Entity, related_name='transactions')
     order_date       = models.DateField()
-    transaction_date = models.DateField()
+    transaction_date = models.DateField(null=True,blank=True)
     amount           = models.IntegerField()
     transactions     = models.ManyToManyField('self',null=True,blank=True)
     files            = models.ManyToManyField(File,null=True,blank=True)
