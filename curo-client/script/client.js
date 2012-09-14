@@ -13,6 +13,9 @@ angular.module('Curo', ['CuroResources', 'CuroComponents', 'CuroFilters', 'CuroP
         $routeProvider.when('/client/add', {
             templateUrl: 'partials/add.html',
         });
+        $routeProvider.when('/client/categories', {
+            templateUrl: 'partials/categories.html',
+        });
         $routeProvider.otherwise({
             redirectTo: '/client/home'
         });
