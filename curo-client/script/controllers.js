@@ -11,3 +11,11 @@ function MainTabs($scope, $location, $log) {
   }
 }
 
+function MonthsController($scope,DateService) {
+    $scope.months = [DateService.January(), DateService.February(), DateService.March()
+                    ,DateService.April(),DateService.May(),DateService.June()
+                    ,DateService.July(),DateService.August(),DateService.September()
+                    ,DateService.October(),DateService.November(),DateService.December()];
+    $scope.tabModel = $scope.months[new Date().getMonth()].name;
+}
+
