@@ -61,7 +61,7 @@ angular.module('CuroResources', [])
                 var value = [];
 
                 function internal_query(url, list) {
-                    $log.info("query, internal", url, list);
+                    //$log.info("query, internal", url, list);
                     $http.get(url)
                         .success(function (data, status, headers, config) {
                             var i = 0;
@@ -71,7 +71,7 @@ angular.module('CuroResources', [])
                             if (data.meta.next) {
                                 internal_query(data.meta.next, list);
                             } else {
-                                $log.info("query, done", list);
+                                //$log.info("query, done", list);
                                 call_callback(success, list);
                             }
                         })
@@ -86,16 +86,24 @@ angular.module('CuroResources', [])
 
             Resource.get = function (resource_uri, success, error) {
                 var value = new Resource();
+                
+                if (!angular.isDefined(resource_uri)) {
+                    return value;
+                }
+                
+                if (angular.isNumber(resource_uri)) {
+                    resource_uri = base_url + resource_uri;
+                }
 
-                $log.info("get", resource_uri, success, error);
+                //$log.info("get", resource_uri, success, error);
                 $http.get(resource_uri)
                     .success(function (data, status, headers, config) {
-                        $log.info("get, success", data, status, config, success);
+                        //$log.info("get, success", data, status, config, success);
                         angular.extend(value, data);
                         call_callback(success, value);
                     })
                     .error(function (data, status, headers, config) {
-                        $log.info("get, failed", data, config);
+                        //$log.info("get, failed", data, config);
                         call_callback(error, "Failed");
                     });
 
@@ -110,7 +118,7 @@ angular.module('CuroResources', [])
                 $log.info("save", method, url, value);
                 $http({method: method, url: url, data: value})
                     .success(function (data, status, headers, config) {
-                        $log.info("save, success", data, status, config);
+                        //$log.info("save, success", data, status, config);
                         if (status === 201) {
                             Resource.get(headers("Location"),
                                 function (newdata) {
