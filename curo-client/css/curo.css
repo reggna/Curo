@@ -1,0 +1,11 @@
+.monthly-table.cell-date {width:10%;}
+.monthly-table.cell-category {width:25%;}
+.monthly-table.cell-entity {width:20%;}
+.monthly-table.cell-amount {width:10%;}
+.monthly-table.cell-note {width:25%;}
+.monthly-table.cell-actions {width:10%;}
+
+.amount-positive {color:rgb(64,228,64);}
+.amount-negative {color:rgb(228,64,64);}
+.currency:before {content: attr(data-currency-prefix);}
+.currency:after {content: attr(data-currency-suffix);}

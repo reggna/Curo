@@ -1,4 +1,4 @@
-angular.module('CuroProviders', [])
+angular.module('CuroProviders', ['CuroResources'])
     .factory('DateService'
         , function($filter, $log) {
 
@@ -98,4 +98,30 @@ angular.module('CuroProviders', [])
             }
         }
     )
+    .service('TransactionSuper', ['$log', '$q', 'Transaction', function($log, $q, Transaction) {
+        var queryFn = function(params) {
+            var deferred = [];
+
+            Transaction.query(params, function(data) {
+                angular.forEach(data, function(value) {
+                    value.category = value.category; // TODO: category integration
+                    deferred.push(value);
+                });
+            });
+
+            return deferred;
+        };
+        var getFn = function(transactionId) {
+            var transaction = Transaction.get(transactionId, function(data) {
+                value.category = value.category; // TODO: category integration
+            });
+            return transaction;
+        };
+
+        return {
+                query: queryFn,
+                get: getFn
+            };
+    }])
     ;
+

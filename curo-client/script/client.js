@@ -1,6 +1,6 @@
-angular.module('Curo', ['CuroResources', 'CuroComponents', 'CuroFilters', 'CuroProviders']
+angular.module('Curo', ['CuroResources', 'CuroComponents', 'CuroFilters', 'CuroProviders', 'bootstrap']
     , function($routeProvider, $locationProvider) {
-    
+
         $routeProvider.when('/client/home', {
             templateUrl: 'partials/home.html',
         });
