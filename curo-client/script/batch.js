@@ -5,8 +5,7 @@ function isDate(value) {
 }
 
 function isNumber(value) {
-    return (value !== undefined && !isNaN(Number(value.replace(',',
-                                         '.').replace(' ', ''))));
+    return value !== undefined && !isNaN(Number(value));
 }
 
 function isEmpty(value) {
@@ -17,22 +16,57 @@ function trim(string) {
     return string.replace(/^\s+|\s+$/g, '');
 }
 
-function detectColumns(data) {
+function Validator(name, validate, parse) {
+    this.name = name;
+    this.parse = parse;
+    if (typeof parse !== 'function') {
+        this.parse = function (string) { return string; };
+    }
+    this.validate = function (string) {return validate(this.parse(string)); };
+}
+
+function stripNumber(string) {
+    if (string === undefined)
+        return "";
+    string = string.replace(/( :-)+$/g, '').replace(/\s+/g, '');
+
+    // 1,100.0 && 1.100,0, 1.100 ==> 1100.0
+    var parts = string.split(/[,.]/g);
+    var sum = Number(parts[0]);
+    for (var p = 1; p < parts.length; p++) {
+        var num = parts[p];
+        if (p === parts.length-1 && parts[p].length <= 2) {
+            // This is most probably the decimal part
+            num = num/Math.pow(10, parts[p].length);
+        } else {
+            sum *= 1000;
+        }
+        sum += (sum < 0? -num:num);
+    }
+    return sum;
+}
+
+function detectColumns(data, validators) {
     var columns = [];
+
+    // Check each column separately
     for (var i = 0; i < data[0].length; i++) {
-        var validators = [["empty", 0, isEmpty], ["number", 0, isNumber],
-                          ["date", 0, isDate],
-                          ["text", 0, function () { return true; }]];
+
+        // Use this to count the number of matches for each validator on each cell
+        for (var v in validators) validators[v].count = 0;
+
         // Gather column type information
         for (var j = 0; j < data.length; j++) {
             for (var v = 0; v < validators.length; v++) {
-                validators[v][1] += validators[v][2](data[j][i]) ? 1: 0;
+                if (validators[v].validate(data[j][i]))
+                    validators[v].count += 1;
             }
         }
+
         // Decide column type
         for (var v = 0; v < validators.length; v++) {
-            if (validators[v][1] == data.length) {
-                columns.push(validators[v][0]);
+            if (validators[v].count === data.length) {
+                columns.push(validators[v]);
                 break;
             }
         }
@@ -40,9 +74,20 @@ function detectColumns(data) {
     return columns;
 }
 
-function parseInfo(raw, log) {
+function parseInfo($scope, log, categories) {
+    var raw = $scope.raw
     var data = [];
     var rows = raw.split("\n");
+
+    function isCategory(category) {
+        return categories.indexOf(category) !== -1;
+    }
+
+    var validators = [ new Validator("empty", isEmpty),
+                       new Validator("number", isNumber, stripNumber),
+                       new Validator("date", isDate),
+                       new Validator("category", isCategory),
+                       new Validator("text", function () { return true; }) ];
 
     for (var i = 0; i < rows.length; i++) {
         var columns = rows[i].split("\t");
@@ -52,37 +97,62 @@ function parseInfo(raw, log) {
         }
         data.push(columns);
     }
-    return {columns: detectColumns(data), data: data};
+    return {columns: detectColumns(data, validators), data: data};
 }
 
-function filterInfo(data, log) {
+function filterInfo(data, categoriesNames, categories, log, Transaction) {
     var result = [];
     var columns = {};
-    
-    columns["accounting_date"] = data.columns.indexOf("date");
-    columns["transaction_date"] = data.columns.indexOf("date", columns["accounting_date"])
-    if (columns["transaction_date"] === -1) {
-        columns["transaction_date"] = columns["accounting_date"]
-    }
-    columns["note"] = data.columns.indexOf("text");
-    columns["amount"] = data.columns.indexOf("number");
 
-    for (var i = 0; i < data.data.length; i++) {
-        result.push([])
-        for (var column in columns) {
-            result[i].push(data.data[i][columns[column]])
-        }
+    for (var row in data.data) {
+        var t = new Transaction();
+        for (var column in data.columns) {
+            var value = data.columns[column].parse(data.data[row][column]);
+            switch(data.columns[column].name) {
+                case "date":
+                    t["transaction_date"] = value;
+                    if (t["order_date"] === undefined)
+                        t["order_date"] = value;
+                    break;
+                case "text":
+                    t["note"] = value;
+                    break;
+                case "number":
+                    t["amount"] = value;
+                    break;
+                case "category":
+                    t["category_obj"] = categories[categoriesNames.indexOf(value)];
+                    t["category"] = t["category_obj"].resource_uri;
+                    break;
+                default: //unknown category
+            }
+        } // for each column
+        result.push(t);
     }
+
     return result;
 }
 
-function BatchController($scope, $log) {
+function BatchController($scope, $log, Category, Transaction) {
     $scope.raw = "";
     $scope.parsed = {};
 
-    $scope.update = function () {
-        var parsedInfo = parseInfo($scope.raw, $log);
-        $scope.parsed = filterInfo(parsedInfo, $log);
-    };
+    Category.get(function (data) {
+        // Populate an array with only the names of the categories
+        var categories = [];
+        for (var i in data.objects) categories[i] = data.objects[i].name;
+
+        $scope.update = function () {
+            var parsedInfo = parseInfo($scope, $log, categories);
+            $scope.parsed = filterInfo(parsedInfo, categories, data.objects, $log, Transaction);
+        };
+
+        $scope.submit = function () {
+            for (var i in $scope.parsed) {
+                delete $scope.parsed[i].category_obj;
+                $scope.parsed[i].$save();
+            }
+        }
+    });
 }
 
