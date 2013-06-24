@@ -142,7 +142,7 @@
         return result;
     }
 
-    function BatchController($scope, $log, Category, Transaction) {
+    window.BatchController = function BatchController($scope, $log, Category, Transaction) {
         $scope.raw = "";
         $scope.parsed = {};
 
@@ -151,6 +151,11 @@
             // Populate an array with only the names of the categories
             $scope.categories = [];
             $scope.categories_obj = [];
+            
+            if (typeof data.objects === 'undefined') {
+                return;
+            }
+            
             for (i = 0; i < data.objects.length; i++) {
                 $scope.categories[i] = data.objects[i].name;
                 $scope.categories_obj[i] = data.objects[i];
