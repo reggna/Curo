@@ -16,13 +16,12 @@ angular.module('CuroResources', [])
                 }
                 delete params[param];
             }
-        
+
             var intervalPattern = /^interval(?:__(.+))?$/;
             return function (params) {
                 var match;
                 for (param in params) {
                     if ((match = param.match(intervalPattern)) != null) {
-                        
                         var field = match[1];
                         if (!field) {
                             field = "order_date";
@@ -32,13 +31,13 @@ angular.module('CuroResources', [])
                 }
             }
         }();
-        
+
         function build_url(base, params) {
             if (!params || params === {}) {
                 return base;
             } else {
                 translate_convenience_params(params);
-                
+
                 var ps = Array();
                 for (param in params) {
                     ps.push(param + "=" + params[param]);
@@ -114,7 +113,7 @@ angular.module('CuroResources', [])
                 var value  = this;
                 var method = this.resource_uri ? "PUT": "POST";
                 var url    = this.resource_uri ? this.resource_uri: base_url;
-                
+
                 $log.info("save", method, url, value);
                 $http({method: method, url: url, data: value})
                     .success(function (data, status, headers, config) {

@@ -1,0 +1,13 @@
+<div data-ng-controller="CategoryController">
+    <h1>Categories</h2>
+    <div>
+        <div data-ng-repeat="c in categories | orderBy:id">
+            <div ng-hide="c.isHidden">
+                <input type="text" value="{{c.name}}" data-ng-model="c.name" data-ng-change="update()" class="categories">
+                <input type="text" value="{{c.note}}" data-ng-model="c.note" data-ng-change="update()">
+                <button data-ng-model="c" ng:click="remove()">x</button>
+            </div>
+        </div>
+        <input type="text" id="add" ng-model="c.name" ng-change="add()">
+    </div>
+</div>
