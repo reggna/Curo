@@ -3,12 +3,12 @@
 
     window.MainTabs = function MainTabs($scope, $location) {
         $scope.tabs = [
-                       {title: 'Home',       url: '/client/home'},
-                       {title: 'Yearly',     url: '/client/yearly'},
-                       {title: 'Monthly',    url: '/client/monthly'},
-                       {title: 'Add',        url: '/client/add'},
-                       {title: 'Categories', url: '/client/categories'}
-                      ];
+            {title: 'Home',       url: '/client/home'},
+            {title: 'Yearly',     url: '/client/yearly'},
+            {title: 'Monthly',    url: '/client/monthly'},
+            {title: 'Add',        url: '/client/add'},
+            {title: 'Categories', url: '/client/categories'}
+        ];
 
         $scope.getClass = function($index) {
             var this_url = $scope.tabs[$index].url,
@@ -59,10 +59,10 @@
     };
     window.MonthController.$inject = ['$scope', 'TransactionSuper', '$log'];
 
-    function CategoryController($scope, Category, Resource) {
-        $scope.categories = Category.query({limit:1000});
+    window.CategoryController = function CategoryController($scope, Category, Resource) {
+        $scope.categories = Category.query({limit: 1000});
         $scope.update = function() {
-            this.c.save()
+            this.c.save();
         };
         $scope.add = function() {
             var cat = new Category(this.c);
@@ -77,10 +77,10 @@
             $scope.categories.push(cat);
         };
         $scope.remove = function() {
-          this.c.remove();
-          this.c.isHidden = true;
+            this.c.remove();
+            this.c.isHidden = true;
         };
-    }
+    };
 
 }());
 
