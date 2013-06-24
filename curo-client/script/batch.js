@@ -2,7 +2,7 @@
     "use strict";
 
     function isDate(value) {
-        return (value !== undefined && !isNaN(Date.parse(value)));
+        return value !== undefined && !isNaN(Date.parse(value));
     }
 
     function isNumber(value) {
@@ -24,6 +24,15 @@
             this.parse = function (string) { return string; };
         }
         this.validate = function (string) {return validate(this.parse(string)); };
+    }
+
+    function stripDate(string) {
+        if (isDate(string)) {
+            return string;
+        } else if (string.search("^[0-9]{2}-[0-9]{2}-[0-9]{2}$") !== -1) {
+            // Swedbank
+            return "20" + string;
+        }
     }
 
     function stripNumber(string) {
@@ -92,7 +101,7 @@
 
         var validators = [ new Validator("empty", isEmpty),
                            new Validator("number", isNumber, stripNumber),
-                           new Validator("date", isDate),
+                           new Validator("date", isDate, stripDate),
                            new Validator("category", isCategory),
                            new Validator("text", function () { return true; }) ];
 
@@ -167,7 +176,6 @@
         $scope.update = function () {
             var parsedInfo = parseInfo($scope, $log, $scope.categories);
             $scope.parsed = filterInfo(parsedInfo, $scope.categories, $scope.categories_obj, $log, Transaction);
-            $log.info($scope.parsed);
         };
 
         $scope.submit = function () {
